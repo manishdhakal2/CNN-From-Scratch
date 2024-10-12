@@ -18,28 +18,26 @@ class ConvLayer(ConvNet):
             arr=super().he_initialization(self.convSize)
             self.filters.append(arr)
     
-    def Conv3D(self,arr, filter, padding=0, stride=1):
-
-         # Apply Padding if necessary 
+    def Conv2D(self, arr, filter, padding=0, stride=1):
+        # Apply Padding if necessary
         if padding > 0:
             arr = np.pad(arr, pad_width=((padding, padding), (padding, padding), (0, 0)), mode='constant')
-        
+    
         # Calculation of dimensions
-        D, H, W, C = arr.shape
-        kD, kH, kW, _ = filter.shape
-        output_D = (D - kD) // stride + 1
+        H, W, C = arr.shape  # Height, Width, Channels
+        kH, kW, _ = filter.shape  # Kernel Height, Kernel Width, Channels (same as input channels)
         output_H = (H - kH) // stride + 1
         output_W = (W - kW) // stride + 1
-        output_volume = np.zeros((output_D, output_H, output_W))
-        
-        #Actual Convolution Process
-        for z in range(0, output_D):
-            for y in range(0, output_H):
-                for x in range(0, output_W):
-                    input_region = arr[z*stride:z*stride+kD, y*stride:y*stride+kH, x*stride:x*stride+kW, :]
-                    output_volume[z, y, x] = np.sum(input_region * filter)
-        
+        output_volume = np.zeros((output_H, output_W))
+    
+        # Actual Convolution Process
+        for y in range(0, output_H):
+            for x in range(0, output_W):
+                input_region = arr[y*stride:y*stride+kH, x*stride:x*stride+kW, :]  # Extract 2D region
+                output_volume[y, x] = np.sum(input_region * filter)  # Element-wise multiplication and sum
+    
         return output_volume
+
         
 
     
