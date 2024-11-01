@@ -51,7 +51,7 @@ class ConvLayer(ConvNet):
         #Apply the convolution to each image
 
         for i in range(self.filterCount):
-            convOutput[:,:,i]=self.Conv3D(x,self.filters[i],padding=0,stride=1)
+            convOutput[:,:,i]=self.Conv2D(x,self.filters[i],padding=0,stride=1)
         
         return convOutput
     
@@ -62,7 +62,7 @@ class ConvLayer(ConvNet):
         convOutput=np.zeros((conv_L,conv_W,self.filterCount))
 
         for i in range(self.filterCount):
-            convOutput[:,:,i]=self.Conv3D(prevError,self.filters[i],padding=0,stride=1)
+            convOutput[:,:,i]=self.Conv2D(prevError,self.filters[i],padding=0,stride=1)
         
         for i in range(0,self.filterCount):
             self.filters[i]-=self.lr*convOutput[i]
